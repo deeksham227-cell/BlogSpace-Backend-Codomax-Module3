@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BlogSpace API Test</title>
+</head>
+
+<body>
+
+    <h1>Registration API Test</h1>
+
+    <button onclick="registerUser()">
+        Test Registration
+    </button>
+
+    <p id="result"></p>
+
+    <script>
+
+        async function registerUser() {
+
+            const result = document.getElementById("result");
+
+            try {
+
+                const response = await fetch(
+                    "http://localhost:5000/api/register",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            name: "Deeksha",
+                            email: "deeksha@gmail.com",
+                            password: "123456"
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                result.textContent = data.message;
+
+                console.log(data);
+
+            } catch (error) {
+
+                result.textContent =
+                    "Error connecting to backend.";
+
+                console.error(error);
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>

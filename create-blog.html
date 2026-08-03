@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>BlogSpace | Create Blog</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+</head>
+
+
+<body>
+
+
+    <!-- Navigation Bar -->
+
+    <header class="navbar">
+
+        <a href="index.html"
+           class="logo">
+
+            Blog<span>Space</span>
+
+        </a>
+
+
+        <nav>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="create-blog.html"
+               class="active">
+
+                Create Blog
+
+            </a>
+
+            <a href="login.html"
+               class="nav-btn">
+
+                Login
+
+            </a>
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- Create Blog Section -->
+
+    <main class="section editor-page">
+
+
+        <!-- Page Heading -->
+
+        <div class="editor-heading">
+
+            <p class="eyebrow">
+                SHARE YOUR IDEAS
+            </p>
+
+            <h1>
+                Create a New Blog
+            </h1>
+
+            <p class="muted">
+                Write something useful, thoughtful, or inspiring.
+            </p>
+
+        </div>
+
+
+
+        <!-- Blog Form -->
+
+        <form id="blogForm"
+              class="editor-card">
+
+
+            <!-- Blog Title -->
+
+            <label for="blogTitle">
+                Blog Title
+            </label>
+
+            <input
+                id="blogTitle"
+                type="text"
+                placeholder="Enter an engaging title"
+                required
+            >
+
+
+
+            <!-- Category and Author -->
+
+            <div class="form-grid">
+
+
+                <div>
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select id="category">
+
+                        <option>
+                            Technology
+                        </option>
+
+                        <option>
+                            Career
+                        </option>
+
+                        <option>
+                            Learning
+                        </option>
+
+                        <option>
+                            Lifestyle
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <div>
+
+                    <label for="author">
+                        Author
+                    </label>
+
+                    <input
+                        id="author"
+                        type="text"
+                        value="Deeksha"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- Blog Content -->
+
+            <label for="blogContent">
+                Blog Content
+            </label>
+
+            <textarea
+                id="blogContent"
+                rows="12"
+                placeholder="Start writing your story..."
+                required
+            ></textarea>
+
+
+
+            <!-- Buttons -->
+
+            <div class="editor-actions">
+
+                <a href="dashboard.html"
+                   class="secondary-btn">
+
+                    Cancel
+
+                </a>
+
+
+                <button
+                    class="btn"
+                    type="submit">
+
+                    Publish Blog
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+    </main>
+
+
+
+    <!-- JavaScript -->
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>
