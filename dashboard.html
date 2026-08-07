@@ -13,9 +13,7 @@
           href="css/style.css">
 </head>
 
-
 <body>
-
 
     <!-- Navigation Bar -->
 
@@ -28,7 +26,6 @@
 
         </a>
 
-
         <nav>
 
             <a href="index.html">
@@ -37,9 +34,7 @@
 
             <a href="dashboard.html"
                class="active">
-
                 Dashboard
-
             </a>
 
             <a href="create-blog.html">
@@ -48,9 +43,7 @@
 
             <a href="login.html"
                class="nav-btn">
-
                 Logout
-
             </a>
 
         </nav>
@@ -58,11 +51,9 @@
     </header>
 
 
-
     <!-- Dashboard -->
 
     <main class="dashboard section">
-
 
         <!-- Dashboard Header -->
 
@@ -85,7 +76,6 @@
 
             </div>
 
-
             <a href="create-blog.html"
                class="btn">
 
@@ -96,16 +86,14 @@
         </div>
 
 
-
         <!-- Statistics -->
 
         <div class="stats">
 
-
             <div class="stat">
 
-                <strong>
-                    03
+                <strong id="totalPosts">
+                    0
                 </strong>
 
                 <span>
@@ -118,7 +106,7 @@
             <div class="stat">
 
                 <strong>
-                    128
+                    0
                 </strong>
 
                 <span>
@@ -131,7 +119,7 @@
             <div class="stat">
 
                 <strong>
-                    24
+                    0
                 </strong>
 
                 <span>
@@ -140,15 +128,12 @@
 
             </div>
 
-
         </div>
-
 
 
         <!-- Posts -->
 
         <div class="table-card">
-
 
             <div class="section-heading">
 
@@ -158,123 +143,19 @@
 
             </div>
 
+            <!-- MongoDB blogs will appear here -->
 
+            <div id="blogsContainer">
 
-            <!-- Post 1 -->
-
-            <div class="post-row">
-
-                <div>
-
-                    <span class="tag">
-                        Technology
-                    </span>
-
-                    <h3>
-                        The Future of Frontend Development
-                    </h3>
-
-                    <small>
-                        Published · Aug 2, 2026
-                    </small>
-
-                </div>
-
-
-                <div class="actions">
-
-                    <button class="edit-btn">
-                        Edit
-                    </button>
-
-                    <button class="delete-btn">
-                        Delete
-                    </button>
-
-                </div>
+                <p class="muted">
+                    Loading blogs...
+                </p>
 
             </div>
-
-
-
-            <!-- Post 2 -->
-
-            <div class="post-row">
-
-                <div>
-
-                    <span class="tag">
-                        Career
-                    </span>
-
-                    <h3>
-                        Building Skills for Your First Internship
-                    </h3>
-
-                    <small>
-                        Published · Aug 1, 2026
-                    </small>
-
-                </div>
-
-
-                <div class="actions">
-
-                    <button class="edit-btn">
-                        Edit
-                    </button>
-
-                    <button class="delete-btn">
-                        Delete
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- Post 3 -->
-
-            <div class="post-row">
-
-                <div>
-
-                    <span class="tag">
-                        Learning
-                    </span>
-
-                    <h3>
-                        Small Steps, Consistent Progress
-                    </h3>
-
-                    <small>
-                        Published · Jul 30, 2026
-                    </small>
-
-                </div>
-
-
-                <div class="actions">
-
-                    <button class="edit-btn">
-                        Edit
-                    </button>
-
-                    <button class="delete-btn">
-                        Delete
-                    </button>
-
-                </div>
-
-            </div>
-
 
         </div>
 
-
     </main>
-
 
 
     <!-- Footer -->
@@ -286,7 +167,6 @@
         </p>
 
     </footer>
-
 
 
     <!-- JavaScript -->
