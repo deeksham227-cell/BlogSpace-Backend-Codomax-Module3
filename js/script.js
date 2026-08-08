@@ -4,74 +4,96 @@ document.addEventListener("DOMContentLoaded", async function () {
        REGISTER
     ========================= */
 
-    const registerForm = document.getElementById("registerForm");
+    const registerForm =
+        document.getElementById("registerForm");
 
     if (registerForm) {
 
-        registerForm.addEventListener("submit", async function (event) {
+        registerForm.addEventListener(
+            "submit",
+            async function (event) {
 
-            event.preventDefault();
+                event.preventDefault();
 
-            const name =
-                document.getElementById("name").value.trim();
+                const name =
+                    document.getElementById("name")
+                        .value.trim();
 
-            const email =
-                document.getElementById("email").value.trim();
+                const email =
+                    document.getElementById("email")
+                        .value.trim();
 
-            const password =
-                document.getElementById("password").value;
+                const password =
+                    document.getElementById("password")
+                        .value;
 
-            const confirmPassword =
-                document.getElementById("confirmPassword").value;
+                const confirmPassword =
+                    document.getElementById(
+                        "confirmPassword"
+                    ).value;
 
-            if (password !== confirmPassword) {
 
-                alert("Passwords do not match.");
+                if (password !== confirmPassword) {
 
-                return;
-            }
+                    alert("Passwords do not match.");
 
-            try {
+                    return;
+                }
 
-                const response = await fetch("/api/register", {
 
-                    method: "POST",
+                try {
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    const response =
+                        await fetch("/api/register", {
 
-                    body: JSON.stringify({
-                        name,
-                        email,
-                        password
-                    })
+                            method: "POST",
 
-                });
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
 
-                const data = await response.json();
+                            body: JSON.stringify({
+                                name,
+                                email,
+                                password
+                            })
 
-                if (response.ok) {
+                        });
 
-                    alert(data.message);
 
-                    window.location.href = "login.html";
+                    const data =
+                        await response.json();
 
-                } else {
 
-                    alert(data.message);
+                    if (response.ok) {
+
+                        alert(data.message);
+
+                        window.location.href =
+                            "login.html";
+
+                    } else {
+
+                        alert(data.message);
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Registration error:",
+                        error
+                    );
+
+                    alert(
+                        "Unable to connect to the server."
+                    );
 
                 }
 
-            } catch (error) {
-
-                console.error("Registration error:", error);
-
-                alert("Unable to connect to the server.");
-
             }
-
-        });
+        );
 
     }
 
@@ -80,60 +102,78 @@ document.addEventListener("DOMContentLoaded", async function () {
        LOGIN
     ========================= */
 
-    const loginForm = document.getElementById("loginForm");
+    const loginForm =
+        document.getElementById("loginForm");
 
     if (loginForm) {
 
-        loginForm.addEventListener("submit", async function (event) {
+        loginForm.addEventListener(
+            "submit",
+            async function (event) {
 
-            event.preventDefault();
+                event.preventDefault();
 
-            const email =
-                document.getElementById("email").value.trim();
+                const email =
+                    document.getElementById("email")
+                        .value.trim();
 
-            const password =
-                document.getElementById("password").value;
+                const password =
+                    document.getElementById("password")
+                        .value;
 
-            try {
 
-                const response = await fetch("/api/login", {
+                try {
 
-                    method: "POST",
+                    const response =
+                        await fetch("/api/login", {
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                            method: "POST",
 
-                    body: JSON.stringify({
-                        email,
-                        password
-                    })
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
 
-                });
+                            body: JSON.stringify({
+                                email,
+                                password
+                            })
 
-                const data = await response.json();
+                        });
 
-                if (response.ok) {
 
-                    alert(data.message);
+                    const data =
+                        await response.json();
 
-                    window.location.href = "dashboard.html";
 
-                } else {
+                    if (response.ok) {
 
-                    alert(data.message);
+                        alert(data.message);
+
+                        window.location.href =
+                            "dashboard.html";
+
+                    } else {
+
+                        alert(data.message);
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Login error:",
+                        error
+                    );
+
+                    alert(
+                        "Unable to connect to the server."
+                    );
 
                 }
 
-            } catch (error) {
-
-                console.error("Login error:", error);
-
-                alert("Unable to connect to the server.");
-
             }
-
-        });
+        );
 
     }
 
@@ -142,81 +182,103 @@ document.addEventListener("DOMContentLoaded", async function () {
        CREATE / PUBLISH BLOG
     ========================= */
 
-    const blogForm = document.getElementById("blogForm");
+    const blogForm =
+        document.getElementById("blogForm");
 
     if (blogForm) {
 
-        blogForm.addEventListener("submit", async function (event) {
+        blogForm.addEventListener(
+            "submit",
+            async function (event) {
 
-            event.preventDefault();
+                event.preventDefault();
 
-            const title =
-                document.getElementById("blogTitle").value.trim();
+                const title =
+                    document.getElementById("blogTitle")
+                        .value.trim();
 
-            const category =
-                document.getElementById("category").value;
+                const category =
+                    document.getElementById("category")
+                        .value;
 
-            const author =
-                document.getElementById("author").value.trim();
+                const author =
+                    document.getElementById("author")
+                        .value.trim();
 
-            const content =
-                document.getElementById("blogContent").value.trim();
+                const content =
+                    document.getElementById("blogContent")
+                        .value.trim();
 
-            if (!title || !author || !content) {
 
-                alert("Please fill in all required fields.");
-
-                return;
-            }
-
-            try {
-
-                const response = await fetch("/api/blogs", {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        title,
-                        category,
-                        author,
-                        content
-                    })
-
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-
-                    alert(data.message);
-
-                    window.location.href = "dashboard.html";
-
-                } else {
+                if (!title || !author || !content) {
 
                     alert(
-                        data.message ||
-                        "Failed to publish blog."
+                        "Please fill in all required fields."
+                    );
+
+                    return;
+                }
+
+
+                try {
+
+                    const response =
+                        await fetch("/api/blogs", {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                title,
+                                category,
+                                author,
+                                content
+
+                            })
+
+                        });
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (response.ok) {
+
+                        alert(data.message);
+
+                        window.location.href =
+                            "dashboard.html";
+
+                    } else {
+
+                        alert(
+                            data.message ||
+                            "Failed to publish blog."
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Blog publishing error:",
+                        error
+                    );
+
+                    alert(
+                        "Unable to connect to the server."
                     );
 
                 }
 
-            } catch (error) {
-
-                console.error(
-                    "Blog publishing error:",
-                    error
-                );
-
-                alert("Unable to connect to the server.");
-
             }
-
-        });
+        );
 
     }
 
@@ -226,7 +288,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     ========================= */
 
     const blogsContainer =
-        document.getElementById("blogsContainer");
+        document.getElementById(
+            "blogsContainer"
+        );
+
 
     if (blogsContainer) {
 
@@ -235,18 +300,22 @@ document.addEventListener("DOMContentLoaded", async function () {
             const response =
                 await fetch("/api/blogs");
 
+
             console.log(
                 "Blog API status:",
                 response.status
             );
 
+
             const blogs =
                 await response.json();
+
 
             console.log(
                 "Blogs received:",
                 blogs
             );
+
 
             if (!response.ok) {
 
@@ -256,8 +325,16 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             }
 
+
+            /* =========================
+               TOTAL POSTS
+            ========================= */
+
             const totalPosts =
-                document.getElementById("totalPosts");
+                document.getElementById(
+                    "totalPosts"
+                );
+
 
             if (totalPosts) {
 
@@ -266,25 +343,42 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             }
 
+
+            /* =========================
+               NO BLOGS
+            ========================= */
+
             if (blogs.length === 0) {
 
                 blogsContainer.innerHTML = `
+
                     <p class="muted">
                         No blogs published yet.
                     </p>
+
                 `;
 
                 return;
+
             }
 
+
             blogsContainer.innerHTML = "";
+
+
+            /* =========================
+               DISPLAY BLOGS
+            ========================= */
 
             blogs.forEach(function (blog) {
 
                 const postRow =
                     document.createElement("div");
 
-                postRow.className = "post-row";
+
+                postRow.className =
+                    "post-row";
+
 
                 postRow.innerHTML = `
 
@@ -300,7 +394,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                         <small>
                             Published ·
-                            ${new Date(blog.date).toLocaleDateString()}
+                            ${
+                                new Date(blog.date)
+                                .toLocaleDateString()
+                            }
                             · By ${blog.author}
                         </small>
 
@@ -310,153 +407,217 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                     </div>
 
-<div class="actions">
 
-    <a
-        href="blog-details.html?id=${blog._id}"
-        class="btn">
-        View Details
-    </a>
+                    <div class="actions">
 
-    <button
-        class="edit-btn"
-        data-id="${blog._id}">
-        Edit
-    </button>
+                        <a
+                            href="blog-details.html?id=${blog._id}"
+                            class="btn">
 
-    <button
-        class="delete-btn"
-        data-id="${blog._id}">
-        Delete
-    </button>
+                            View Details
 
-</div>
+                        </a>
+
+
+                        <button
+                            class="edit-btn"
+                            data-id="${blog._id}">
+
+                            Edit
+
+                        </button>
+
+
+                        <button
+                            class="delete-btn"
+                            data-id="${blog._id}">
+
+                            Delete
+
+                        </button>
+
+                    </div>
 
                 `;
 
-                blogsContainer.appendChild(postRow);
 
-/* =========================
-   EDIT BLOG
-========================= */
+                blogsContainer.appendChild(
+                    postRow
+                );
 
-const editButton =
-    postRow.querySelector(".edit-btn");
 
-editButton.addEventListener(
-    "click",
-    async function () {
+                /* =========================
+                   EDIT BLOG
+                   UPDATE MONGODB
+                ========================= */
 
-        const blogId =
-            this.dataset.id;
+                const editButton =
+                    postRow.querySelector(
+                        ".edit-btn"
+                    );
 
-        const newTitle =
-            prompt(
-                "Edit blog title:",
-                blog.title
-            );
 
-        if (newTitle === null) {
-            return;
-        }
+                editButton.addEventListener(
+                    "click",
+                    async function () {
 
-        const newCategory =
-            prompt(
-                "Edit category:",
-                blog.category || "General"
-            );
+                        const blogId =
+                            this.dataset.id;
 
-        if (newCategory === null) {
-            return;
-        }
 
-        const newContent =
-            prompt(
-                "Edit blog content:",
-                blog.content
-            );
+                        const newTitle =
+                            prompt(
+                                "Edit blog title:",
+                                blog.title
+                            );
 
-        if (newContent === null) {
-            return;
-        }
 
-        if (!newTitle.trim() || !newContent.trim()) {
+                        if (newTitle === null) {
+                            return;
+                        }
 
-            alert(
-                "Title and content cannot be empty."
-            );
 
-            return;
-        }
+                        const newCategory =
+                            prompt(
+                                "Edit category:",
+                                blog.category ||
+                                "General"
+                            );
 
-        try {
 
-            const response =
-                await fetch(
-                    `/api/blogs/${blogId}`,
-                    {
-                        method: "PUT",
+                        if (newCategory === null) {
+                            return;
+                        }
 
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
 
-                        body: JSON.stringify({
+                        const newAuthor =
+                            prompt(
+                                "Edit author:",
+                                blog.author
+                            );
 
-                            title:
-                                newTitle.trim(),
 
-                            category:
-                                newCategory.trim() ||
-                                "General",
+                        if (newAuthor === null) {
+                            return;
+                        }
 
-                            content:
-                                newContent.trim()
 
-                        })
+                        const newContent =
+                            prompt(
+                                "Edit blog content:",
+                                blog.content
+                            );
+
+
+                        if (newContent === null) {
+                            return;
+                        }
+
+
+                        if (
+                            !newTitle.trim() ||
+                            !newAuthor.trim() ||
+                            !newContent.trim()
+                        ) {
+
+                            alert(
+                                "Title, author and content cannot be empty."
+                            );
+
+                            return;
+
+                        }
+
+
+                        try {
+
+                            const response =
+                                await fetch(
+                                    `/api/blogs/${blogId}`,
+                                    {
+
+                                        method: "PUT",
+
+                                        headers: {
+
+                                            "Content-Type":
+                                                "application/json"
+
+                                        },
+
+                                        body:
+                                            JSON.stringify({
+
+                                                title:
+                                                    newTitle.trim(),
+
+                                                category:
+                                                    newCategory
+                                                        .trim() ||
+                                                    "General",
+
+                                                author:
+                                                    newAuthor.trim(),
+
+                                                content:
+                                                    newContent.trim()
+
+                                            })
+
+                                    }
+                                );
+
+
+                            const data =
+                                await response.json();
+
+
+                            if (response.ok) {
+
+                                alert(
+                                    data.message
+                                );
+
+
+                                window.location.reload();
+
+                            } else {
+
+                                alert(
+                                    data.message ||
+                                    "Unable to update blog."
+                                );
+
+                            }
+
+                        } catch (error) {
+
+                            console.error(
+                                "Edit error:",
+                                error
+                            );
+
+
+                            alert(
+                                "Unable to connect to the server."
+                            );
+
+                        }
+
                     }
                 );
 
-            const data =
-                await response.json();
 
-            if (response.ok) {
-
-                alert(data.message);
-
-                window.location.reload();
-
-            } else {
-
-                alert(
-                    data.message ||
-                    "Unable to update blog."
-                );
-
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Edit error:",
-                error
-            );
-
-            alert(
-                "Unable to connect to the server."
-            );
-
-        }
-
-    }
-);
                 /* =========================
                    DELETE BLOG
+                   DELETE FROM MONGODB
                 ========================= */
 
                 const deleteButton =
-                    postRow.querySelector(".delete-btn");
+                    postRow.querySelector(
+                        ".delete-btn"
+                    );
+
 
                 deleteButton.addEventListener(
                     "click",
@@ -465,16 +626,17 @@ editButton.addEventListener(
                         const blogId =
                             this.dataset.id;
 
+
                         const confirmation =
                             confirm(
                                 "Are you sure you want to delete this blog?"
                             );
 
+
                         if (!confirmation) {
-
                             return;
-
                         }
+
 
                         try {
 
@@ -482,16 +644,23 @@ editButton.addEventListener(
                                 await fetch(
                                     `/api/blogs/${blogId}`,
                                     {
+
                                         method: "DELETE"
+
                                     }
                                 );
+
 
                             const data =
                                 await response.json();
 
+
                             if (response.ok) {
 
-                                alert(data.message);
+                                alert(
+                                    data.message
+                                );
+
 
                                 postRow.remove();
 
@@ -503,13 +672,15 @@ editButton.addEventListener(
                                         "totalPosts"
                                     );
 
+
                                 if (totalPosts) {
 
                                     totalPosts.textContent =
                                         Math.max(
                                             0,
                                             Number(
-                                                totalPosts.textContent
+                                                totalPosts
+                                                    .textContent
                                             ) - 1
                                         );
 
@@ -531,6 +702,7 @@ editButton.addEventListener(
                                 error
                             );
 
+
                             alert(
                                 "Unable to connect to the server."
                             );
@@ -542,6 +714,7 @@ editButton.addEventListener(
 
             });
 
+
         } catch (error) {
 
             console.error(
@@ -549,124 +722,153 @@ editButton.addEventListener(
                 error
             );
 
+
             blogsContainer.innerHTML = `
+
                 <p class="muted">
                     Unable to load blogs.
                 </p>
+
             `;
 
         }
 
     }
-/* =========================
-   BLOG DETAILS
-========================= */
-
-const blogTitle =
-    document.getElementById("blogTitle");
-
-const blogCategory =
-    document.getElementById("blogCategory");
-
-const blogMeta =
-    document.getElementById("blogMeta");
-
-const blogContent =
-    document.getElementById("blogContent");
 
 
-if (
-    blogTitle &&
-    blogCategory &&
-    blogMeta &&
-    blogContent
-) {
+    /* =========================
+       BLOG DETAILS
+    ========================= */
 
-    const urlParams =
-        new URLSearchParams(window.location.search);
-
-    const blogId =
-        urlParams.get("id");
+    const blogTitle =
+        document.getElementById(
+            "blogTitle"
+        );
 
 
-    if (!blogId) {
-
-        blogTitle.textContent =
-            "Blog not found";
-
-        blogCategory.textContent =
-            "Error";
-
-        blogMeta.textContent =
-            "";
-
-        blogContent.textContent =
-            "No blog ID was provided.";
-
-    } else {
-
-        try {
-
-            const response =
-                await fetch(
-                    `/api/blogs/${blogId}`
-                );
-
-            const blog =
-                await response.json();
+    const blogCategory =
+        document.getElementById(
+            "blogCategory"
+        );
 
 
-            if (!response.ok) {
-
-                throw new Error(
-                    blog.message ||
-                    "Failed to load blog"
-                );
-
-            }
+    const blogMeta =
+        document.getElementById(
+            "blogMeta"
+        );
 
 
-            blogCategory.textContent =
-                blog.category || "General";
+    const blogContent =
+        document.getElementById(
+            "blogContent"
+        );
 
 
-            blogTitle.textContent =
-                blog.title;
+    if (
+        blogTitle &&
+        blogCategory &&
+        blogMeta &&
+        blogContent
+    ) {
 
-
-            blogMeta.textContent =
-                `Published · ${
-                    new Date(blog.date)
-                    .toLocaleDateString()
-                } · By ${blog.author}`;
-
-
-            blogContent.textContent =
-                blog.content;
-
-
-        } catch (error) {
-
-            console.error(
-                "Error loading blog details:",
-                error
+        const urlParams =
+            new URLSearchParams(
+                window.location.search
             );
 
+
+        const blogId =
+            urlParams.get("id");
+
+
+        if (!blogId) {
+
             blogTitle.textContent =
-                "Unable to load blog";
+                "Blog not found";
+
 
             blogCategory.textContent =
                 "Error";
 
+
             blogMeta.textContent =
                 "";
 
+
             blogContent.textContent =
-                "Unable to load the blog details.";
+                "No blog ID was provided.";
+
+        } else {
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/blogs/${blogId}`
+                    );
+
+
+                const blog =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        blog.message ||
+                        "Failed to load blog"
+                    );
+
+                }
+
+
+                blogCategory.textContent =
+                    blog.category ||
+                    "General";
+
+
+                blogTitle.textContent =
+                    blog.title;
+
+
+                blogMeta.textContent =
+                    `Published · ${
+                        new Date(blog.date)
+                        .toLocaleDateString()
+                    } · By ${blog.author}`;
+
+
+                blogContent.textContent =
+                    blog.content;
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error loading blog details:",
+                    error
+                );
+
+
+                blogTitle.textContent =
+                    "Unable to load blog";
+
+
+                blogCategory.textContent =
+                    "Error";
+
+
+                blogMeta.textContent =
+                    "";
+
+
+                blogContent.textContent =
+                    "Unable to load the blog details.";
+
+            }
 
         }
 
     }
 
-}
 });
