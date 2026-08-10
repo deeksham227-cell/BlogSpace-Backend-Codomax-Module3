@@ -9,7 +9,7 @@ const User = require("./models/User");
 const Blog = require("./models/Blog");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // =========================
 // MONGODB CONNECTION
