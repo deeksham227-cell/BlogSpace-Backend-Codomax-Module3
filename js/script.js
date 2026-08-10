@@ -1,6 +1,114 @@
 document.addEventListener("DOMContentLoaded", async function () {
 
     /* =========================
+       PROFILE + LOGOUT
+    ========================= */
+
+    const profileBtn = document.getElementById("profileBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const profileCard = document.getElementById("profileCard");
+    const closeProfile = document.getElementById("closeProfile");
+
+    const profileName = document.getElementById("profileName");
+    const profileEmail = document.getElementById("profileEmail");
+
+
+    /* =========================
+       PROFILE BUTTON
+    ========================= */
+
+    if (profileBtn) {
+
+        profileBtn.onclick = function (event) {
+
+            event.preventDefault();
+
+            const token = localStorage.getItem("token");
+            const savedUser = localStorage.getItem("user");
+
+            if (!token || !savedUser) {
+
+                alert("Please login first.");
+
+                window.location.href = "login.html";
+
+                return;
+            }
+
+            try {
+
+                const user = JSON.parse(savedUser);
+
+                if (profileName) {
+                    profileName.textContent =
+                        user.name || "Not available";
+                }
+
+                if (profileEmail) {
+                    profileEmail.textContent =
+                        user.email || "Not available";
+                }
+
+                if (profileCard) {
+                    profileCard.style.display = "flex";
+                }
+
+            } catch (error) {
+
+                console.error("Profile error:", error);
+
+                alert("Unable to load profile.");
+
+            }
+
+        };
+
+    }
+
+
+    /* =========================
+       CLOSE PROFILE
+    ========================= */
+
+    if (closeProfile) {
+
+        closeProfile.onclick = function (event) {
+
+            event.preventDefault();
+
+            if (profileCard) {
+                profileCard.style.display = "none";
+            }
+
+        };
+
+    }
+
+
+    /* =========================
+       LOGOUT BUTTON
+    ========================= */
+
+    if (logoutBtn) {
+
+        logoutBtn.onclick = function (event) {
+
+            event.preventDefault();
+
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+
+            alert("Logged out successfully.");
+
+            window.location.href = "login.html";
+
+        };
+
+    }
+
+
+    /* =========================
        REGISTER
     ========================= */
 
@@ -28,10 +136,8 @@ document.addEventListener("DOMContentLoaded", async function () {
                         .value;
 
                 const confirmPassword =
-                    document.getElementById(
-                        "confirmPassword"
-                    ).value;
-
+                    document.getElementById("confirmPassword")
+                        .value;
 
                 if (password !== confirmPassword) {
 
@@ -40,31 +146,31 @@ document.addEventListener("DOMContentLoaded", async function () {
                     return;
                 }
 
-
                 try {
 
                     const response =
-                        await fetch("/api/register", {
+                        await fetch(
+                            "http://localhost:5000/api/register",
+                            {
 
-                            method: "POST",
+                                method: "POST",
 
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
 
-                            body: JSON.stringify({
-                                name,
-                                email,
-                                password
-                            })
+                                body: JSON.stringify({
+                                    name,
+                                    email,
+                                    password
+                                })
 
-                        });
-
+                            }
+                        );
 
                     const data =
                         await response.json();
-
 
                     if (response.ok) {
 
@@ -75,7 +181,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                     } else {
 
-                        alert(data.message);
+                        alert(
+                            data.message ||
+                            "Registration failed."
+                        );
 
                     }
 
@@ -114,39 +223,49 @@ document.addEventListener("DOMContentLoaded", async function () {
                 event.preventDefault();
 
                 const email =
-                    document.getElementById("email")
+                    document.getElementById("loginEmail")
                         .value.trim();
 
                 const password =
-                    document.getElementById("password")
+                    document.getElementById("loginPassword")
                         .value;
-
 
                 try {
 
                     const response =
-                        await fetch("/api/login", {
+                        await fetch(
+                            "http://localhost:5000/api/login",
+                            {
 
-                            method: "POST",
+                                method: "POST",
 
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
 
-                            body: JSON.stringify({
-                                email,
-                                password
-                            })
+                                body: JSON.stringify({
+                                    email,
+                                    password
+                                })
 
-                        });
-
+                            }
+                        );
 
                     const data =
                         await response.json();
 
-
                     if (response.ok) {
+
+                        localStorage.setItem(
+                            "token",
+                            data.token
+                        );
+
+                        localStorage.setItem(
+                            "user",
+                            JSON.stringify(data.user)
+                        );
 
                         alert(data.message);
 
@@ -155,7 +274,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                     } else {
 
-                        alert(data.message);
+                        alert(
+                            data.message ||
+                            "Login failed."
+                        );
 
                     }
 
@@ -201,16 +323,29 @@ document.addEventListener("DOMContentLoaded", async function () {
                     document.getElementById("category")
                         .value;
 
-                const author =
-                    document.getElementById("author")
-                        .value.trim();
-
                 const content =
                     document.getElementById("blogContent")
                         .value.trim();
 
+                const token =
+                    localStorage.getItem("token");
 
-                if (!title || !author || !content) {
+                const savedUser =
+                    localStorage.getItem("user");
+
+                if (!token) {
+
+                    alert(
+                        "Please login before creating a blog."
+                    );
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+                }
+
+                if (!title || !content) {
 
                     alert(
                         "Please fill in all required fields."
@@ -219,34 +354,70 @@ document.addEventListener("DOMContentLoaded", async function () {
                     return;
                 }
 
+                let user = null;
+
+                try {
+
+                    user =
+                        JSON.parse(savedUser);
+
+                } catch (error) {
+
+                    console.error(
+                        "User data error:",
+                        error
+                    );
+
+                }
+
+                if (!user || !user.name) {
+
+                    alert(
+                        "User information not found. Please login again."
+                    );
+
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+                }
 
                 try {
 
                     const response =
-                        await fetch("/api/blogs", {
+                        await fetch(
+                            "http://localhost:5000/api/blogs",
+                            {
 
-                            method: "POST",
+                                method: "POST",
 
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
+                                headers: {
 
-                            body: JSON.stringify({
+                                    "Content-Type":
+                                        "application/json",
 
-                                title,
-                                category,
-                                author,
-                                content
+                                    "Authorization":
+                                        `Bearer ${token}`
 
-                            })
+                                },
 
-                        });
+                                body: JSON.stringify({
 
+                                    title,
+                                    category,
+                                    author: user.name,
+                                    content
+
+                                })
+
+                            }
+                        );
 
                     const data =
                         await response.json();
-
 
                     if (response.ok) {
 
@@ -285,6 +456,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     /* =========================
        DASHBOARD
+       LOGGED-IN USER BLOGS
     ========================= */
 
     const blogsContainer =
@@ -292,63 +464,124 @@ document.addEventListener("DOMContentLoaded", async function () {
             "blogsContainer"
         );
 
-
     if (blogsContainer) {
+
+        const token =
+            localStorage.getItem("token");
+
+        const savedUser =
+            localStorage.getItem("user");
+
+        if (!token) {
+
+            alert(
+                "Please login to access the dashboard."
+            );
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
+        let currentUser = null;
+
+        try {
+
+            currentUser =
+                JSON.parse(savedUser);
+
+        } catch (error) {
+
+            console.error(
+                "User data error:",
+                error
+            );
+
+        }
 
         try {
 
             const response =
-                await fetch("/api/blogs");
+                await fetch(
+                    "http://localhost:5000/api/blogs",
+                    {
 
+                        headers: {
 
-            console.log(
-                "Blog API status:",
-                response.status
-            );
+                            "Authorization":
+                                `Bearer ${token}`
 
+                        }
+
+                    }
+                );
 
             const blogs =
                 await response.json();
 
+            if (
+                response.status === 401 ||
+                response.status === 403
+            ) {
 
-            console.log(
-                "Blogs received:",
-                blogs
-            );
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
 
+                alert(
+                    "Your session has expired. Please login again."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
 
             if (!response.ok) {
 
                 throw new Error(
+                    blogs.message ||
                     "Failed to load blogs"
                 );
 
             }
 
+            let userBlogs = blogs;
 
-            /* =========================
-               TOTAL POSTS
-            ========================= */
+            if (currentUser && currentUser.name) {
+
+                userBlogs =
+                    blogs.filter(function (blog) {
+
+                        return (
+                            blog.author ===
+                            currentUser.name
+                        );
+
+                    });
+
+            }
+
+
+            /* TOTAL POSTS */
 
             const totalPosts =
                 document.getElementById(
                     "totalPosts"
                 );
 
-
             if (totalPosts) {
 
                 totalPosts.textContent =
-                    blogs.length;
+                    userBlogs.length;
 
             }
 
 
-            /* =========================
-               NO BLOGS
-            ========================= */
+            /* NO BLOGS */
 
-            if (blogs.length === 0) {
+            if (userBlogs.length === 0) {
 
                 blogsContainer.innerHTML = `
 
@@ -366,19 +599,15 @@ document.addEventListener("DOMContentLoaded", async function () {
             blogsContainer.innerHTML = "";
 
 
-            /* =========================
-               DISPLAY BLOGS
-            ========================= */
+            /* DISPLAY BLOGS */
 
-            blogs.forEach(function (blog) {
+            userBlogs.forEach(function (blog) {
 
                 const postRow =
                     document.createElement("div");
 
-
                 postRow.className =
                     "post-row";
-
 
                 postRow.innerHTML = `
 
@@ -396,7 +625,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                             Published ·
                             ${
                                 new Date(blog.date)
-                                .toLocaleDateString()
+                                    .toLocaleDateString()
                             }
                             · By ${blog.author}
                         </small>
@@ -406,7 +635,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                         </p>
 
                     </div>
-
 
                     <div class="actions">
 
@@ -418,7 +646,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                         </a>
 
-
                         <button
                             class="edit-btn"
                             data-id="${blog._id}">
@@ -426,7 +653,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                             Edit
 
                         </button>
-
 
                         <button
                             class="delete-btn"
@@ -440,7 +666,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 `;
 
-
                 blogsContainer.appendChild(
                     postRow
                 );
@@ -448,14 +673,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 /* =========================
                    EDIT BLOG
-                   UPDATE MONGODB
                 ========================= */
 
                 const editButton =
                     postRow.querySelector(
                         ".edit-btn"
                     );
-
 
                 editButton.addEventListener(
                     "click",
@@ -464,18 +687,15 @@ document.addEventListener("DOMContentLoaded", async function () {
                         const blogId =
                             this.dataset.id;
 
-
                         const newTitle =
                             prompt(
                                 "Edit blog title:",
                                 blog.title
                             );
 
-
                         if (newTitle === null) {
                             return;
                         }
-
 
                         const newCategory =
                             prompt(
@@ -484,23 +704,9 @@ document.addEventListener("DOMContentLoaded", async function () {
                                 "General"
                             );
 
-
                         if (newCategory === null) {
                             return;
                         }
-
-
-                        const newAuthor =
-                            prompt(
-                                "Edit author:",
-                                blog.author
-                            );
-
-
-                        if (newAuthor === null) {
-                            return;
-                        }
-
 
                         const newContent =
                             prompt(
@@ -508,32 +714,44 @@ document.addEventListener("DOMContentLoaded", async function () {
                                 blog.content
                             );
 
-
                         if (newContent === null) {
                             return;
                         }
 
-
                         if (
                             !newTitle.trim() ||
-                            !newAuthor.trim() ||
                             !newContent.trim()
                         ) {
 
                             alert(
-                                "Title, author and content cannot be empty."
+                                "Title and content cannot be empty."
                             );
 
                             return;
-
                         }
 
+                        const currentToken =
+                            localStorage.getItem(
+                                "token"
+                            );
+
+                        if (!currentToken) {
+
+                            alert(
+                                "Please login again."
+                            );
+
+                            window.location.href =
+                                "login.html";
+
+                            return;
+                        }
 
                         try {
 
                             const response =
                                 await fetch(
-                                    `/api/blogs/${blogId}`,
+                                    `http://localhost:5000/api/blogs/${blogId}`,
                                     {
 
                                         method: "PUT",
@@ -541,7 +759,10 @@ document.addEventListener("DOMContentLoaded", async function () {
                                         headers: {
 
                                             "Content-Type":
-                                                "application/json"
+                                                "application/json",
+
+                                            "Authorization":
+                                                `Bearer ${currentToken}`
 
                                         },
 
@@ -552,12 +773,11 @@ document.addEventListener("DOMContentLoaded", async function () {
                                                     newTitle.trim(),
 
                                                 category:
-                                                    newCategory
-                                                        .trim() ||
+                                                    newCategory.trim() ||
                                                     "General",
 
                                                 author:
-                                                    newAuthor.trim(),
+                                                    blog.author,
 
                                                 content:
                                                     newContent.trim()
@@ -567,17 +787,14 @@ document.addEventListener("DOMContentLoaded", async function () {
                                     }
                                 );
 
-
                             const data =
                                 await response.json();
-
 
                             if (response.ok) {
 
                                 alert(
                                     data.message
                                 );
-
 
                                 window.location.reload();
 
@@ -597,7 +814,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                                 error
                             );
 
-
                             alert(
                                 "Unable to connect to the server."
                             );
@@ -610,14 +826,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 /* =========================
                    DELETE BLOG
-                   DELETE FROM MONGODB
                 ========================= */
 
                 const deleteButton =
                     postRow.querySelector(
                         ".delete-btn"
                     );
-
 
                 deleteButton.addEventListener(
                     "click",
@@ -626,34 +840,53 @@ document.addEventListener("DOMContentLoaded", async function () {
                         const blogId =
                             this.dataset.id;
 
-
                         const confirmation =
                             confirm(
                                 "Are you sure you want to delete this blog?"
                             );
 
-
                         if (!confirmation) {
                             return;
                         }
 
+                        const currentToken =
+                            localStorage.getItem(
+                                "token"
+                            );
+
+                        if (!currentToken) {
+
+                            alert(
+                                "Please login again."
+                            );
+
+                            window.location.href =
+                                "login.html";
+
+                            return;
+                        }
 
                         try {
 
                             const response =
                                 await fetch(
-                                    `/api/blogs/${blogId}`,
+                                    `http://localhost:5000/api/blogs/${blogId}`,
                                     {
 
-                                        method: "DELETE"
+                                        method: "DELETE",
+
+                                        headers: {
+
+                                            "Authorization":
+                                                `Bearer ${currentToken}`
+
+                                        }
 
                                     }
                                 );
 
-
                             const data =
                                 await response.json();
-
 
                             if (response.ok) {
 
@@ -661,17 +894,12 @@ document.addEventListener("DOMContentLoaded", async function () {
                                     data.message
                                 );
 
-
                                 postRow.remove();
-
-
-                                /* Update Total Posts */
 
                                 const totalPosts =
                                     document.getElementById(
                                         "totalPosts"
                                     );
-
 
                                 if (totalPosts) {
 
@@ -679,8 +907,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                                         Math.max(
                                             0,
                                             Number(
-                                                totalPosts
-                                                    .textContent
+                                                totalPosts.textContent
                                             ) - 1
                                         );
 
@@ -702,7 +929,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                                 error
                             );
 
-
                             alert(
                                 "Unable to connect to the server."
                             );
@@ -714,14 +940,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             });
 
-
         } catch (error) {
 
             console.error(
                 "Error loading blogs:",
                 error
             );
-
 
             blogsContainer.innerHTML = `
 
@@ -745,24 +969,20 @@ document.addEventListener("DOMContentLoaded", async function () {
             "blogTitle"
         );
 
-
     const blogCategory =
         document.getElementById(
             "blogCategory"
         );
-
 
     const blogMeta =
         document.getElementById(
             "blogMeta"
         );
 
-
     const blogContent =
         document.getElementById(
             "blogContent"
         );
-
 
     if (
         blogTitle &&
@@ -776,24 +996,34 @@ document.addEventListener("DOMContentLoaded", async function () {
                 window.location.search
             );
 
-
         const blogId =
             urlParams.get("id");
 
+        const token =
+            localStorage.getItem("token");
+
+        if (!token) {
+
+            alert(
+                "Please login to view this blog."
+            );
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
 
         if (!blogId) {
 
             blogTitle.textContent =
                 "Blog not found";
 
-
             blogCategory.textContent =
                 "Error";
 
-
             blogMeta.textContent =
                 "";
-
 
             blogContent.textContent =
                 "No blog ID was provided.";
@@ -804,13 +1034,39 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 const response =
                     await fetch(
-                        `/api/blogs/${blogId}`
-                    );
+                        `http://localhost:5000/api/blogs/${blogId}`,
+                        {
 
+                            headers: {
+
+                                "Authorization":
+                                    `Bearer ${token}`
+
+                            }
+
+                        }
+                    );
 
                 const blog =
                     await response.json();
 
+                if (
+                    response.status === 401 ||
+                    response.status === 403
+                ) {
+
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+
+                    alert(
+                        "Your session has expired. Please login again."
+                    );
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+                }
 
                 if (!response.ok) {
 
@@ -821,26 +1077,21 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 }
 
-
                 blogCategory.textContent =
                     blog.category ||
                     "General";
 
-
                 blogTitle.textContent =
                     blog.title;
-
 
                 blogMeta.textContent =
                     `Published · ${
                         new Date(blog.date)
-                        .toLocaleDateString()
+                            .toLocaleDateString()
                     } · By ${blog.author}`;
-
 
                 blogContent.textContent =
                     blog.content;
-
 
             } catch (error) {
 
@@ -849,18 +1100,14 @@ document.addEventListener("DOMContentLoaded", async function () {
                     error
                 );
 
-
                 blogTitle.textContent =
                     "Unable to load blog";
-
 
                 blogCategory.textContent =
                     "Error";
 
-
                 blogMeta.textContent =
                     "";
-
 
                 blogContent.textContent =
                     "Unable to load the blog details.";

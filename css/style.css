@@ -823,3 +823,50 @@ footer {
     }
 
 }
+/* =========================
+   PROFILE POPUP
+========================= */
+
+.profile-card {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.profile-content {
+    position: relative;
+    width: 420px;
+    max-width: 90%;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.close-profile {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    border: none;
+    background: transparent;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.profile-info {
+    margin-top: 20px;
+}
+
+.profile-info p {
+    margin: 15px 0;
+}
+
+.profile-info strong {
+    margin-right: 5px;
+}

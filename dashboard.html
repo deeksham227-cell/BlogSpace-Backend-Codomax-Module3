@@ -1,178 +1,231 @@
-<!DOCTYPE html>
-<html lang="en">
+<meta charset="UTF-8">
 
-<head>
-    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<title>BlogSpace | Dashboard</title>
 
-    <title>BlogSpace | Dashboard</title>
+<link rel="stylesheet"
+      href="css/style.css">
 
-    <link rel="stylesheet"
-          href="css/style.css">
-</head>
 
-<body>
+<a href="index.html"
+   class="logo">
 
-    <!-- Navigation Bar -->
+    Blog<span>Space</span>
 
-    <header class="navbar">
+</a>
 
-        <a href="index.html"
-           class="logo">
+<nav>
 
-            Blog<span>Space</span>
+    <a href="index.html">
+        Home
+    </a>
 
-        </a>
+    <a href="dashboard.html"
+       class="active">
+        Dashboard
+    </a>
 
-        <nav>
+    <a href="create-blog.html">
+        Create Blog
+    </a>
 
-            <a href="index.html">
-                Home
-            </a>
+    <!-- Profile Button -->
 
-            <a href="dashboard.html"
-               class="active">
-                Dashboard
-            </a>
+    <button
+        id="profileBtn"
+        class="nav-btn"
+        type="button">
 
-            <a href="create-blog.html">
-                Create Blog
-            </a>
+        Profile
 
-            <a href="login.html"
-               class="nav-btn">
-                Logout
-            </a>
+    </button>
 
-        </nav>
+    <!-- Logout Button -->
 
-    </header>
+    <button
+        id="logoutBtn"
+        class="nav-btn"
+        type="button">
 
+        Logout
 
-    <!-- Dashboard -->
+    </button>
 
-    <main class="dashboard section">
+</nav>
 
-        <!-- Dashboard Header -->
 
-        <div class="dashboard-top">
+<!-- Dashboard Header -->
 
-            <div>
+<div class="dashboard-top">
 
-                <p class="eyebrow">
-                    YOUR WORKSPACE
-                </p>
+    <div>
 
-                <h1>
-                    Dashboard
-                </h1>
-
-                <p class="muted">
-                    Manage your published stories and create
-                    something new.
-                </p>
-
-            </div>
-
-            <a href="create-blog.html"
-               class="btn">
-
-                + Create Blog
-
-            </a>
-
-        </div>
-
-
-        <!-- Statistics -->
-
-        <div class="stats">
-
-            <div class="stat">
-
-                <strong id="totalPosts">
-                    0
-                </strong>
-
-                <span>
-                    Total Posts
-                </span>
-
-            </div>
-
-
-            <div class="stat">
-
-                <strong>
-                    0
-                </strong>
-
-                <span>
-                    Total Views
-                </span>
-
-            </div>
-
-
-            <div class="stat">
-
-                <strong>
-                    0
-                </strong>
-
-                <span>
-                    Likes
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- Posts -->
-
-        <div class="table-card">
-
-            <div class="section-heading">
-
-                <h2>
-                    Your Posts
-                </h2>
-
-            </div>
-
-            <!-- MongoDB blogs will appear here -->
-
-            <div id="blogsContainer">
-
-                <p class="muted">
-                    Loading blogs...
-                </p>
-
-            </div>
-
-        </div>
-
-    </main>
-
-
-    <!-- Footer -->
-
-    <footer>
-
-        <p>
-            © 2026 BlogSpace. Built with HTML, CSS & JavaScript.
+        <p class="eyebrow">
+            YOUR WORKSPACE
         </p>
 
-    </footer>
+        <h1>
+            Dashboard
+        </h1>
+
+        <p class="muted">
+            Manage your published stories and create
+            something new.
+        </p>
+
+    </div>
+
+    <a href="create-blog.html"
+       class="btn">
+
+        + Create Blog
+
+    </a>
+
+</div>
 
 
-    <!-- JavaScript -->
+<!-- =========================
+     STATISTICS
+========================= -->
 
-    <script src="js/script.js"></script>
+<div class="stats">
+
+    <div class="stat">
+
+        <strong id="totalPosts">
+            0
+        </strong>
+
+        <span>
+            Total Posts
+        </span>
+
+    </div>
+
+
+    <div class="stat">
+
+        <strong>
+            0
+        </strong>
+
+        <span>
+            Total Views
+        </span>
+
+    </div>
+
+
+    <div class="stat">
+
+        <strong>
+            0
+        </strong>
+
+        <span>
+            Likes
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     POSTS
+========================= -->
+
+<div class="table-card">
+
+    <div class="section-heading">
+
+        <h2>
+            Your Posts
+        </h2>
+
+    </div>
+
+
+    <!-- MongoDB blogs will appear here -->
+
+    <div id="blogsContainer">
+
+        <p class="muted">
+            Loading blogs...
+        </p>
+
+    </div>
+
+</div>
+
+<!-- PROFILE -->
+
+<div id="profileCard"
+     class="profile-card"
+     style="display: none;">
+
+  <div id="profileCard" class="profile-card" style="display: none;"></div>
+
+    <div class="profile-content">
+
+        <button
+            id="closeProfile"
+            class="close-profile"
+            type="button">
+
+            ×
+
+        </button>
+
+        <p class="eyebrow">
+            MY PROFILE
+        </p>
+
+        <h2>
+            User Profile
+        </h2>
+
+        <div class="profile-info">
+
+            <p>
+                <strong>
+                    Name:
+                </strong>
+
+                <span id="profileName">
+                    -
+                </span>
+            </p>
+
+            <p>
+                <strong>
+                    Email:
+                </strong>
+
+                <span id="profileEmail">
+                    -
+                </span>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+<footer>
+    <p>
+        © 2026 BlogSpace. Built with HTML, CSS & JavaScript.
+    </p>
+</footer>
+
+<script src="js/script.js"></script>
 
 </body>
-
 </html>

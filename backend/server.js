@@ -3,13 +3,13 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 
 const User = require("./models/User");
 const Blog = require("./models/Blog");
 
 const app = express();
 const PORT = 5000;
-
 
 // =========================
 // MONGODB CONNECTION
@@ -27,20 +27,61 @@ mongoose
         );
     });
 
-
 // =========================
 // MIDDLEWARE
 // =========================
 
 app.use(express.json());
 
-// Serve BlogSpace frontend
+// =========================
+// JWT AUTHENTICATION MIDDLEWARE
+// =========================
+
+function authenticateToken(req, res, next) {
+
+    const authHeader = req.headers["authorization"];
+
+    const token =
+        authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+
+        return res.status(401).json({
+            message: "Access denied. Please login."
+        });
+
+    }
+
+    jwt.verify(
+        token,
+        process.env.JWT_SECRET,
+        (error, user) => {
+
+            if (error) {
+
+                return res.status(403).json({
+                    message: "Invalid or expired token."
+                });
+
+            }
+
+            req.user = user;
+
+            next();
+
+        }
+    );
+}
+
+// =========================
+// SERVE FRONTEND
+// =========================
+
 app.use(
     express.static(
         path.join(__dirname, "..")
     )
 );
-
 
 // =========================
 // BACKEND TEST
@@ -53,7 +94,6 @@ app.get("/api", (req, res) => {
     });
 
 });
-
 
 // =========================
 // REGISTER API
@@ -69,7 +109,6 @@ app.post("/api/register", async (req, res) => {
             password
         } = req.body;
 
-
         if (!name || !email || !password) {
 
             return res.status(400).json({
@@ -78,10 +117,8 @@ app.post("/api/register", async (req, res) => {
 
         }
 
-
         const existingUser =
             await User.findOne({ email });
-
 
         if (existingUser) {
 
@@ -91,14 +128,12 @@ app.post("/api/register", async (req, res) => {
 
         }
 
-
         const newUser =
             await User.create({
                 name,
                 email,
                 password
             });
-
 
         res.status(201).json({
 
@@ -127,7 +162,6 @@ app.post("/api/register", async (req, res) => {
 
 });
 
-
 // =========================
 // LOGIN API
 // =========================
@@ -141,7 +175,6 @@ app.post("/api/login", async (req, res) => {
             password
         } = req.body;
 
-
         if (!email || !password) {
 
             return res.status(400).json({
@@ -150,13 +183,11 @@ app.post("/api/login", async (req, res) => {
 
         }
 
-
         const user =
             await User.findOne({
                 email,
                 password
             });
-
 
         if (!user) {
 
@@ -166,10 +197,29 @@ app.post("/api/login", async (req, res) => {
 
         }
 
+        // Generate JWT token
+
+        const token = jwt.sign(
+
+            {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            },
+
+            process.env.JWT_SECRET,
+
+            {
+                expiresIn: "2h"
+            }
+
+        );
 
         res.status(200).json({
 
             message: "Login successful",
+
+            token: token,
 
             user: {
                 id: user._id,
@@ -194,198 +244,128 @@ app.post("/api/login", async (req, res) => {
 
 });
 
-
 // =========================
 // GET ALL BLOGS API
 // READ
 // =========================
 
-app.get("/api/blogs", async (req, res) => {
+app.get(
+    "/api/blogs",
+    authenticateToken,
+    async (req, res) => {
 
-    try {
+        try {
 
-        const blogs =
-            await Blog.find()
-                .sort({ date: -1 });
+            const blogs =
+                await Blog.find()
+                    .sort({ date: -1 });
 
+            res.status(200).json(blogs);
 
-        res.status(200).json(blogs);
+        } catch (error) {
 
-    } catch (error) {
+            console.error(
+                "GET BLOGS ERROR:",
+                error
+            );
 
-        console.error(
-            "GET BLOGS ERROR:",
-            error
-        );
+            res.status(500).json({
 
-        res.status(500).json({
+                message: "Error fetching blogs",
 
-            message: "Error fetching blogs",
+                error: error.message
 
-            error: error.message
+            });
 
-        });
+        }
 
     }
-
-});
-
+);
 
 // =========================
 // GET SINGLE BLOG API
 // READ
 // =========================
 
-app.get("/api/blogs/:id", async (req, res) => {
+app.get(
+    "/api/blogs/:id",
+    authenticateToken,
+    async (req, res) => {
 
-    try {
+        try {
 
-        const blog =
-            await Blog.findById(
-                req.params.id
+            const blog =
+                await Blog.findById(
+                    req.params.id
+                );
+
+            if (!blog) {
+
+                return res.status(404).json({
+                    message: "Blog not found"
+                });
+
+            }
+
+            res.status(200).json(blog);
+
+        } catch (error) {
+
+            console.error(
+                "GET SINGLE BLOG ERROR:",
+                error
             );
 
+            res.status(500).json({
 
-        if (!blog) {
+                message: "Error fetching blog",
 
-            return res.status(404).json({
-                message: "Blog not found"
+                error: error.message
+
             });
 
         }
 
-
-        res.status(200).json(blog);
-
-    } catch (error) {
-
-        console.error(
-            "GET SINGLE BLOG ERROR:",
-            error
-        );
-
-        res.status(500).json({
-
-            message: "Error fetching blog",
-
-            error: error.message
-
-        });
-
     }
-
-});
-
+);
 
 // =========================
 // CREATE BLOG API
 // CREATE
 // =========================
 
-app.post("/api/blogs", async (req, res) => {
+app.post(
+    "/api/blogs",
+    authenticateToken,
+    async (req, res) => {
 
-    try {
+        try {
 
-        const {
-            title,
-            category,
-            author,
-            content
-        } = req.body;
-
-
-        if (!title || !author || !content) {
-
-            return res.status(400).json({
-
-                message:
-                    "Please fill in all required fields"
-
-            });
-
-        }
-
-
-        const newBlog =
-            await Blog.create({
-
+            const {
                 title,
-
-                category:
-                    category || "General",
-
-                author,
-
+                category,
                 content
+            } = req.body;
 
-            });
+            if (!title || !content) {
 
+                return res.status(400).json({
 
-        res.status(201).json({
+                    message:
+                        "Title and content are required"
 
-            message:
-                "Blog published successfully",
+                });
 
-            blog: newBlog
+            }
 
-        });
+            // Use logged-in user's name
+            // instead of trusting the frontend author field
 
-    } catch (error) {
+            const author = req.user.name;
 
-        console.error(
-            "Blog creation error:",
-            error
-        );
+            const newBlog =
+                await Blog.create({
 
-        res.status(500).json({
-
-            message:
-                "Failed to publish blog",
-
-            error: error.message
-
-        });
-
-    }
-
-});
-
-
-// =========================
-// UPDATE BLOG API
-// UPDATE
-// =========================
-
-app.put("/api/blogs/:id", async (req, res) => {
-
-    try {
-
-        const {
-            title,
-            category,
-            author,
-            content
-        } = req.body;
-
-
-        if (!title || !author || !content) {
-
-            return res.status(400).json({
-
-                message:
-                    "Please fill in all required fields"
-
-            });
-
-        }
-
-
-        const updatedBlog =
-            await Blog.findByIdAndUpdate(
-
-                req.params.id,
-
-                {
                     title,
 
                     category:
@@ -394,112 +374,230 @@ app.put("/api/blogs/:id", async (req, res) => {
                     author,
 
                     content
-                },
 
-                {
-                    new: true,
-                    runValidators: true
-                }
+                });
 
-            );
-
-
-        if (!updatedBlog) {
-
-            return res.status(404).json({
+            res.status(201).json({
 
                 message:
-                    "Blog not found"
+                    "Blog published successfully",
+
+                blog: newBlog
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Blog creation error:",
+                error
+            );
+
+            res.status(500).json({
+
+                message:
+                    "Failed to publish blog",
+
+                error: error.message
 
             });
 
         }
 
+    }
+);
 
-        res.status(200).json({
+// =========================
+// UPDATE BLOG API
+// UPDATE
+// =========================
 
-            message:
-                "Blog updated successfully",
+app.put(
+    "/api/blogs/:id",
+    authenticateToken,
+    async (req, res) => {
 
-            blog: updatedBlog
+        try {
 
-        });
+            const {
+                title,
+                category,
+                content
+            } = req.body;
 
-    } catch (error) {
+            if (!title || !content) {
 
-        console.error(
-            "UPDATE BLOG ERROR:",
-            error
-        );
+                return res.status(400).json({
 
-        res.status(500).json({
+                    message:
+                        "Title and content are required"
 
-            message:
-                "Error updating blog",
+                });
 
-            error: error.message
+            }
 
-        });
+            // Find blog first
+
+            const existingBlog =
+                await Blog.findById(
+                    req.params.id
+                );
+
+            if (!existingBlog) {
+
+                return res.status(404).json({
+
+                    message:
+                        "Blog not found"
+
+                });
+
+            }
+
+            // Only the owner can edit
+
+            if (
+                existingBlog.author !==
+                req.user.name
+            ) {
+
+                return res.status(403).json({
+
+                    message:
+                        "You can only edit your own blogs"
+
+                });
+
+            }
+
+            const updatedBlog =
+                await Blog.findByIdAndUpdate(
+
+                    req.params.id,
+
+                    {
+                        title,
+
+                        category:
+                            category || "General",
+
+                        content
+                    },
+
+                    {
+                        new: true,
+                        runValidators: true
+                    }
+
+                );
+
+            res.status(200).json({
+
+                message:
+                    "Blog updated successfully",
+
+                blog: updatedBlog
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "UPDATE BLOG ERROR:",
+                error
+            );
+
+            res.status(500).json({
+
+                message:
+                    "Error updating blog",
+
+                error: error.message
+
+            });
+
+        }
 
     }
-
-});
-
+);
 
 // =========================
 // DELETE BLOG API
 // DELETE
 // =========================
 
-app.delete("/api/blogs/:id", async (req, res) => {
+app.delete(
+    "/api/blogs/:id",
+    authenticateToken,
+    async (req, res) => {
 
-    try {
+        try {
 
-        const deletedBlog =
+            // Find blog first
+
+            const existingBlog =
+                await Blog.findById(
+                    req.params.id
+                );
+
+            if (!existingBlog) {
+
+                return res.status(404).json({
+
+                    message:
+                        "Blog not found"
+
+                });
+
+            }
+
+            // Only the owner can delete
+
+            if (
+                existingBlog.author !==
+                req.user.name
+            ) {
+
+                return res.status(403).json({
+
+                    message:
+                        "You can only delete your own blogs"
+
+                });
+
+            }
+
             await Blog.findByIdAndDelete(
                 req.params.id
             );
 
-
-        if (!deletedBlog) {
-
-            return res.status(404).json({
+            res.status(200).json({
 
                 message:
-                    "Blog not found"
+                    "Blog deleted successfully"
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "DELETE BLOG ERROR:",
+                error
+            );
+
+            res.status(500).json({
+
+                message:
+                    "Error deleting blog",
+
+                error: error.message
 
             });
 
         }
 
-
-        res.status(200).json({
-
-            message:
-                "Blog deleted successfully"
-
-        });
-
-    } catch (error) {
-
-        console.error(
-            "DELETE BLOG ERROR:",
-            error
-        );
-
-        res.status(500).json({
-
-            message:
-                "Error deleting blog",
-
-            error: error.message
-
-        });
-
     }
-
-});
-
+);
 
 // =========================
 // START SERVER
