@@ -1,3 +1,4 @@
+const API_URL = "https://blogspace-codomax-module4.onrender.com";
 document.addEventListener("DOMContentLoaded", async function () {
 
     /* =========================
@@ -149,10 +150,8 @@ document.addEventListener("DOMContentLoaded", async function () {
                 try {
 
                     const response =
-                        await fetch(
-                            "http://localhost:5000/api/register",
-                            {
-
+                        await
+                            fetch(`${API_URL}/api/register`, {
                                 method: "POST",
 
                                 headers: {
@@ -233,9 +232,8 @@ document.addEventListener("DOMContentLoaded", async function () {
                 try {
 
                     const response =
-                        await fetch(
-                            "http://localhost:5000/api/login",
-                            {
+                        await
+                            fetch(`${API_URL}/api/login`, {
 
                                 method: "POST",
 
@@ -388,10 +386,8 @@ document.addEventListener("DOMContentLoaded", async function () {
                 try {
 
                     const response =
-                        await fetch(
-                            "http://localhost:5000/api/blogs",
-                            {
-
+                        await 
+                            fetch(`${API_URL}/api/blogs`, {
                                 method: "POST",
 
                                 headers: {
@@ -503,10 +499,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         try {
 
             const response =
-                await fetch(
-                    "http://localhost:5000/api/blogs",
-                    {
-
+                await 
+                    fetch(`${API_URL}/api/blogs`, {
                         headers: {
 
                             "Authorization":
@@ -750,10 +744,8 @@ document.addEventListener("DOMContentLoaded", async function () {
                         try {
 
                             const response =
-                                await fetch(
-                                    `http://localhost:5000/api/blogs/${blogId}`,
-                                    {
-
+                                await 
+                                fetch(`${API_URL}/api/blogs/${blogId}`, {
                                         method: "PUT",
 
                                         headers: {
@@ -869,10 +861,8 @@ document.addEventListener("DOMContentLoaded", async function () {
                         try {
 
                             const response =
-                                await fetch(
-                                    `http://localhost:5000/api/blogs/${blogId}`,
-                                    {
-
+                                await 
+                                    fetch(`${API_URL}/api/blogs/${blogId}`, {
                                         method: "DELETE",
 
                                         headers: {
@@ -1033,10 +1023,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             try {
 
                 const response =
-                    await fetch(
-                        `http://localhost:5000/api/blogs/${blogId}`,
-                        {
-
+                    await 
+                        fetch(`${API_URL}/api/blogs/${blogId}`, {
                             headers: {
 
                                 "Authorization":
