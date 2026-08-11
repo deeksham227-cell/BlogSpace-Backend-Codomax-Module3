@@ -1,16 +1,16 @@
 {
-  "name": "backend",
+  "name": "blogspace-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "BlogSpace backend",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "cors": "^2.8.6",
-    "express": "^5.2.1"
+    "dotenv": "^16.4.7",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.0"
   }
 }
